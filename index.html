@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DP Hub Pro — Central de Estudos & Inteligência de Departamento Pessoal</title>
+    <title>DP Hub Pro — Bancada de Exercícios & Enciclopédia Prática (2026)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -14,11 +13,9 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#eef2ff',
                             500: '#6366f1',
                             600: '#4f46e5',
                             700: '#4338ca',
-                            900: '#1e1b4b',
                         },
                         dark: {
                             bg: '#090d16',
@@ -38,288 +35,357 @@
 <body class="bg-dark-bg text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-brand-500 selection:text-white">
 
     <!-- Top Navigation Bar -->
-    <header class="bg-dark-panel/80 backdrop-blur-md border-b border-dark-border sticky top-0 z-50 px-4 lg:px-8 py-3.5 flex items-center justify-between">
+    <header class="bg-dark-panel/90 backdrop-blur-md border-b border-dark-border sticky top-0 z-50 px-4 lg:px-8 py-3 flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <div class="bg-gradient-to-tr from-brand-600 to-cyan-500 p-2 rounded-xl text-white shadow-lg shadow-brand-500/20">
-                <i data-lucide="calculator" class="w-6 h-6"></i>
+            <div class="bg-gradient-to-tr from-brand-600 to-indigo-500 p-2 rounded-xl text-white shadow-lg shadow-brand-500/20">
+                <i data-lucide="calculator" class="w-5 h-5"></i>
             </div>
             <div>
-                <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">DP Hub Pro</h1>
-                <p class="text-xs text-slate-400">Ambiente de Operações & Guia de Mesa 2026</p>
+                <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-2">
+                    DP Hub Pro
+                    <span class="text-[10px] bg-brand-500/20 text-brand-300 px-2 py-0.5 rounded-full border border-brand-500/30">Manual & Interativo</span>
+                </h1>
+                <p class="text-[11px] text-slate-400">Bancada de Treino Prático & Wiki de Departamento Pessoal</p>
             </div>
         </div>
 
         <!-- Navigation Tabs -->
-        <nav class="flex items-center gap-1.5 bg-dark-bg p-1 rounded-xl border border-dark-border/80">
-            <button onclick="switchView('workbench')" id="btn-nav-workbench" class="nav-btn active flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all">
-                <i data-lucide="layout-grid" class="w-4 h-4"></i>
-                <span>Bancada Prática</span>
+        <nav class="flex items-center gap-1.5 bg-dark-bg p-1 rounded-xl border border-dark-border">
+            <button onclick="switchView('workbench')" id="btn-nav-workbench" class="nav-btn active flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold transition-all">
+                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                <span>Bancada de Treino</span>
             </button>
-            <button onclick="switchView('docs')" id="btn-nav-docs" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all">
-                <i data-lucide="book-open" class="w-4 h-4"></i>
-                <span>Wiki & Legislação</span>
+            <button onclick="switchView('docs')" id="btn-nav-docs" class="nav-btn flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">
+                <i data-lucide="book-marked" class="w-4 h-4"></i>
+                <span>Enciclopédia & Wiki DP</span>
             </button>
         </nav>
 
-        <!-- Search & External Link -->
-        <div class="hidden md:flex items-center gap-3">
-            <div class="relative">
-                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                <input type="text" id="quickDocSearch" placeholder="Consultar CLT, Súmula, INSS..." class="bg-dark-bg border border-dark-border text-xs rounded-lg pl-9 pr-3 py-2 w-64 text-slate-200 focus:outline-none focus:border-brand-500 transition-all placeholder:text-slate-500">
-            </div>
+        <!-- Right Tools -->
+        <div class="flex items-center gap-3">
+            <label class="hidden sm:flex items-center gap-2 text-xs text-slate-300 cursor-pointer bg-dark-bg px-3 py-1.5 rounded-lg border border-dark-border">
+                <input type="checkbox" id="chkAutoValidate" checked onchange="validarCampos()" class="rounded text-brand-600 focus:ring-0">
+                <span>Conferência 🟢🔴</span>
+            </label>
         </div>
     </header>
 
     <!-- Main Content Container -->
-    <main class="flex-1 max-w-[1700px] w-full mx-auto p-4 lg:p-6 grid grid-cols-1 gap-6">
+    <main class="flex-1 max-w-[1750px] w-full mx-auto p-4 lg:p-6 grid grid-cols-1 gap-6">
 
-        <!-- VIEW 1: BANCADA DE CÁLCULO (WORKBENCH) -->
+        <!-- VIEW 1: BANCADA DE CÁLCULO MANUAL -->
         <section id="view-workbench" class="grid grid-cols-1 xl:grid-cols-12 gap-6">
             
-            <!-- Left & Center: Calculators (8 Cols) -->
-            <div class="xl:col-span-8 space-y-6">
+            <!-- Left 8 Cols: Formulários Manuais -->
+            <div class="xl:col-span-8 space-y-5">
                 
-                <!-- Workbench Module Navigation -->
+                <!-- Sub-abas da bancada -->
                 <div class="bg-dark-panel p-2 rounded-2xl border border-dark-border flex flex-wrap gap-2 items-center justify-between">
-                    <div class="flex gap-2">
-                        <button onclick="switchWorkbenchTab('tab-folha')" id="wb-tab-folha" class="wb-tab-btn active px-4 py-2 rounded-xl text-xs font-bold transition-all">Folha & Adicionais</button>
-                        <button onclick="switchWorkbenchTab('tab-ponto')" id="wb-tab-ponto" class="wb-tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all">Folha de Ponto (Centesimal)</button>
-                        <button onclick="switchWorkbenchTab('tab-ferias')" id="wb-tab-ferias" class="wb-tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all">Férias & Abono</button>
-                        <button onclick="switchWorkbenchTab('tab-rescisao')" id="wb-tab-rescisao" class="wb-tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all">Rescisão Contratual</button>
+                    <div class="flex gap-1.5">
+                        <button onclick="switchWorkbenchTab('tab-folha')" id="wb-tab-folha" class="wb-tab-btn active px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all">Folha & Adicionais</button>
+                        <button onclick="switchWorkbenchTab('tab-ferias')" id="wb-tab-ferias" class="wb-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all">Férias & Abono</button>
+                        <button onclick="switchWorkbenchTab('tab-rescisao')" id="wb-tab-rescisao" class="wb-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all">Rescisão Contratual</button>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button onclick="clearCurrentWorkbench()" class="px-3 py-1.5 text-xs text-rose-400 hover:bg-rose-500/10 border border-rose-500/30 rounded-lg font-medium transition-all flex items-center gap-1.5">
-                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        <button onclick="limparCampos()" class="px-3 py-1.5 text-xs text-rose-400 hover:bg-rose-500/10 border border-rose-500/30 rounded-lg font-medium transition-all flex items-center gap-1.5">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                             Limpar
                         </button>
-                        <button onclick="copyFormattedReport()" class="px-3 py-1.5 text-xs bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-semibold transition-all flex items-center gap-1.5 shadow-lg shadow-brand-600/20">
+                        <button onclick="copiarDemonstrativo()" class="px-3.5 py-1.5 text-xs bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-bold transition-all flex items-center gap-1.5 shadow-lg shadow-brand-600/20">
                             <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                            Copiar Demonstrativo
+                            Copiar para o Chat
                         </button>
                     </div>
                 </div>
 
-                <!-- SUB-ABA 1: FOLHA MENSAL -->
-                <div id="subtab-folha" class="workbench-subtab space-y-6">
+                <!-- ABA 1: FOLHA MENSAL -->
+                <div id="subtab-folha" class="workbench-subtab space-y-4">
                     
-                    <!-- Bloco 1: Contrato & Calendário -->
-                    <div class="bg-dark-panel p-5 rounded-2xl border border-dark-border space-y-4">
-                        <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
+                    <!-- 1. Parâmetros Contratuais & Adicionais -->
+                    <div class="bg-dark-panel p-4 rounded-2xl border border-dark-border space-y-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
                             <i data-lucide="calendar" class="w-4 h-4"></i>
-                            1. Parâmetros do Mês & Salário Contratual
+                            1. Parâmetros do Mês & Salário Base
                         </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Salário Base (R$)</label>
-                                <input type="text" id="wb-salario" class="currency-input input-field" placeholder="Ex: 2.500,00" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Salário Base (R$)</label>
+                                <input type="text" id="wb-salario" class="currency-input input-field" placeholder="Ex: 2.600,00" oninput="validarCampos()">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Dias Úteis (Segunda a Sábado)</label>
-                                <input type="number" id="wb-dias-uteis" class="input-field" value="25" min="1" max="27" oninput="runCalculations()">
-                            </div>
-                            <div>
-                                <label class="text-xs text-slate-400 font-medium">Domingos & Feriados (DSR)</label>
-                                <input type="number" id="wb-dsr-dias" class="input-field" value="5" min="1" max="10" oninput="runCalculations()">
-                            </div>
-                            <div>
-                                <label class="text-xs text-slate-400 font-medium">Adicional Especial</label>
-                                <select id="wb-tipo-adicional" class="input-field" onchange="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Tipo de Adicional Especial</label>
+                                <select id="wb-tipo-adicional" class="input-field" onchange="validarCampos()">
                                     <option value="nenhum">Nenhum</option>
                                     <option value="periculosidade">Periculosidade (30% Sal. Base)</option>
-                                    <option value="insalubridade_10">Insalubridade Mínima (10%)</option>
-                                    <option value="insalubridade_20">Insalubridade Média (20%)</option>
-                                    <option value="insalubridade_40">Insalubridade Máxima (40%)</option>
+                                    <option value="insalubridade_10">Insalubridade Mínima (10% Mín.)</option>
+                                    <option value="insalubridade_20">Insalubridade Média (20% Mín.)</option>
+                                    <option value="insalubridade_40">Insalubridade Máxima (40% Mín.)</option>
                                 </select>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">Dias Úteis (Seg a Sáb)</label>
+                                <input type="number" id="wb-dias-uteis" class="input-field" value="24" oninput="validarCampos()">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">Domingos & Feriados (DSR)</label>
+                                <input type="number" id="wb-dsr-dias" class="input-field" value="6" oninput="validarCampos()">
+                            </div>
+                        </div>
+
+                        <!-- Apuração das Bases Integradas -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-dark-border/60">
+                            <div>
+                                <label class="text-[11px] text-slate-400">Valor Periculosidade/Insalubridade (R$)</label>
+                                <input type="text" id="wb-val-adicional" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-wb-val-adicional"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">Valor da Hora Normal Integrada (R$)</label>
+                                <input type="text" id="wb-val-hora" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-wb-val-hora"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">Valor da Hora Extra 50% (R$)</label>
+                                <input type="text" id="wb-val-he50-unit" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-wb-val-he50-unit"></span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Bloco 2: Variáveis & Noturno -->
-                    <div class="bg-dark-panel p-5 rounded-2xl border border-dark-border space-y-4">
-                        <h3 class="text-sm font-bold text-purple-400 flex items-center gap-2">
+                    <!-- 2. Apuração de Ponto & Proventos -->
+                    <div class="bg-dark-panel p-4 rounded-2xl border border-dark-border space-y-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-purple-400 flex items-center gap-2">
                             <i data-lucide="moon" class="w-4 h-4"></i>
-                            2. Variáveis, Horas Extras & Adicional Noturno
+                            2. Variáveis, Horas Extras & Noturno
                         </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Qtd Horas Extras 50%</label>
-                                <input type="text" id="wb-qtd-he50" class="input-field" placeholder="Ex: 10 ou 10,50" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Horas Noturnas Relógio (Qtd)</label>
+                                <input type="text" id="wb-noturno-relogio" class="input-field" placeholder="Ex: 28" oninput="validarCampos()">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Qtd Horas Extras 100%</label>
-                                <input type="text" id="wb-qtd-he100" class="input-field" placeholder="Ex: 0,00" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Horas Noturnas Reduzidas (Qtd)</label>
+                                <input type="text" id="wb-noturno-reduzido" class="input-field" placeholder="Ex: 32" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-wb-noturno-reduzido"></span>
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Horas Noturnas (Relógio)</label>
-                                <input type="text" id="wb-horas-noturnas-relogio" class="input-field" placeholder="Ex: 28" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Qtd Horas Extras 50%</label>
+                                <input type="text" id="wb-qtd-he50" class="input-field" placeholder="Ex: 10" oninput="validarCampos()">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Comissões (R$)</label>
-                                <input type="text" id="wb-comissoes" class="currency-input input-field" placeholder="Ex: 0,00" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Comissões (R$)</label>
+                                <input type="text" id="wb-comissao" class="currency-input input-field" placeholder="Ex: 0,00" oninput="validarCampos()">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 pt-2 border-t border-dark-border/60">
+                            <div>
+                                <label class="text-[11px] text-slate-400">Total Horas Extras 50% (R$)</label>
+                                <input type="text" id="wb-tot-he50" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-wb-tot-he50"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">Total Adicional Noturno (R$)</label>
+                                <input type="text" id="wb-tot-adn" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-wb-tot-adn"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">DSR s/ HE e Noturno (R$)</label>
+                                <input type="text" id="wb-tot-dsr" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-wb-tot-dsr"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400 font-bold text-emerald-400">TOTAL PROVENTOS / BRUTO (R$)</label>
+                                <input type="text" id="wb-tot-proventos" class="currency-input input-field font-bold text-emerald-400" placeholder="Digite o Salário Bruto" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-wb-tot-proventos"></span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Bloco 3: Descontos & Faltas -->
-                    <div class="bg-dark-panel p-5 rounded-2xl border border-dark-border space-y-4">
-                        <h3 class="text-sm font-bold text-rose-400 flex items-center gap-2">
+                    <!-- 3. Descontos, Encargos & Líquido -->
+                    <div class="bg-dark-panel p-4 rounded-2xl border border-dark-border space-y-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-2">
                             <i data-lucide="user-minus" class="w-4 h-4"></i>
-                            3. Faltas, Atrasos & Deduções Legais
+                            3. Faltas, Descontos & Tributação
                         </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Dias de Falta Injustificada</label>
-                                <input type="number" id="wb-faltas-dias" class="input-field" value="0" min="0" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Desconto Faltas + DSR Perdido (R$)</label>
+                                <input type="text" id="wb-desc-faltas" class="currency-input input-field" placeholder="Ex: 0,00" oninput="validarCampos()">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">DSRs Perdidos por Falta</label>
-                                <input type="number" id="wb-dsr-perdido" class="input-field" value="0" min="0" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Desconto Atrasos (R$)</label>
+                                <input type="text" id="wb-desc-atrasos" class="currency-input input-field" placeholder="Ex: 0,00" oninput="validarCampos()">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Atrasos (Horas Decimais)</label>
-                                <input type="text" id="wb-atrasos-horas" class="input-field" placeholder="Ex: 1,50" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Desconto Vale-Transporte (6% R$)</label>
+                                <input type="text" id="wb-desc-vt" class="currency-input input-field" placeholder="Ex: 0,00" oninput="validarCampos()">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Dependentes de IRRF</label>
-                                <input type="number" id="wb-num-deps" class="input-field" value="0" min="0" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Dependentes IRRF</label>
+                                <input type="number" id="wb-num-deps" class="input-field" value="0" oninput="validarCampos()">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 pt-2 border-t border-dark-border/60">
+                            <div>
+                                <label class="text-[11px] text-slate-400">INSS Progressivo (R$)</label>
+                                <input type="text" id="wb-desc-inss" class="currency-input input-field font-semibold text-rose-300" placeholder="Digite o INSS apurado" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-wb-desc-inss"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">IRRF (com Redução 2026 R$)</label>
+                                <input type="text" id="wb-desc-irrf" class="currency-input input-field font-semibold text-rose-300" placeholder="Digite o IRRF apurado" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-wb-desc-irrf"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">TOTAL DESCONTOS (R$)</label>
+                                <input type="text" id="wb-tot-descontos" class="currency-input input-field font-bold text-rose-400" placeholder="Soma dos descontos" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-wb-tot-descontos"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400 font-bold text-brand-300">SALÁRIO LÍQUIDO (R$)</label>
+                                <input type="text" id="wb-tot-liquido" class="currency-input input-field font-black text-white bg-brand-950/40 border-brand-500/40" placeholder="Líquido a receber" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-wb-tot-liquido"></span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- SUB-ABA 2: FOLHA DE PONTO CENTESIMAL -->
-                <div id="subtab-ponto" class="workbench-subtab hidden space-y-6">
-                    <div class="bg-dark-panel p-5 rounded-2xl border border-dark-border space-y-4">
-                        <h3 class="text-sm font-bold text-cyan-400 flex items-center gap-2">
-                            <i data-lucide="clock" class="w-4 h-4"></i>
-                            Conversor & Validador de Tolerância (Art. 58 CLT)
-                        </h3>
-                        <p class="text-xs text-slate-400">Insira a jornada contratual e as batidas diárias para apurar automaticamente se houve tolerância, horas extras ou atrasos integrais.</p>
-                        
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-dark-bg p-4 rounded-xl border border-dark-border">
-                            <div>
-                                <label class="text-[11px] text-slate-400">Entrada Prevista</label>
-                                <input type="time" id="ponto-prev-ent" value="08:00" class="input-field text-center">
-                            </div>
-                            <div>
-                                <label class="text-[11px] text-slate-400">Saída Almoço Prev.</label>
-                                <input type="time" id="ponto-prev-alm-sai" value="12:00" class="input-field text-center">
-                            </div>
-                            <div>
-                                <label class="text-[11px] text-slate-400">Retorno Almoço Prev.</label>
-                                <input type="time" id="ponto-prev-alm-ret" value="13:00" class="input-field text-center">
-                            </div>
-                            <div>
-                                <label class="text-[11px] text-slate-400">Saída Prevista</label>
-                                <input type="time" id="ponto-prev-sai" value="17:00" class="input-field text-center">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-dark-bg p-4 rounded-xl border border-dark-border">
-                            <div>
-                                <label class="text-[11px] text-slate-400">1ª Batida (Real)</label>
-                                <input type="time" id="ponto-real-ent" value="07:54" class="input-field text-center" onchange="calcPontoApuracao()">
-                            </div>
-                            <div>
-                                <label class="text-[11px] text-slate-400">2ª Batida (Real)</label>
-                                <input type="time" id="ponto-real-alm-sai" value="12:00" class="input-field text-center" onchange="calcPontoApuracao()">
-                            </div>
-                            <div>
-                                <label class="text-[11px] text-slate-400">3ª Batida (Real)</label>
-                                <input type="time" id="ponto-real-alm-ret" value="13:00" class="input-field text-center" onchange="calcPontoApuracao()">
-                            </div>
-                            <div>
-                                <label class="text-[11px] text-slate-400">4ª Batida (Real)</label>
-                                <input type="time" id="ponto-real-sai" value="17:08" class="input-field text-center" onchange="calcPontoApuracao()">
-                            </div>
-                        </div>
-
-                        <div id="ponto-resultado-card" class="p-4 rounded-xl border border-brand-500/30 bg-brand-950/20 text-xs space-y-1">
-                            <span class="font-bold text-brand-400 text-sm">Resultado da Análise da Jornada</span>
-                            <p id="ponto-resultado-texto" class="text-slate-300 leading-relaxed">Carregando apuração...</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SUB-ABA 3: FÉRIAS -->
-                <div id="subtab-ferias" class="workbench-subtab hidden space-y-6">
-                    <div class="bg-dark-panel p-5 rounded-2xl border border-dark-border space-y-4">
-                        <h3 class="text-sm font-bold text-emerald-400 flex items-center gap-2">
+                <!-- ABA 2: FÉRIAS -->
+                <div id="subtab-ferias" class="workbench-subtab hidden space-y-4">
+                    <div class="bg-dark-panel p-4 rounded-2xl border border-dark-border space-y-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
                             <i data-lucide="palmtree" class="w-4 h-4"></i>
-                            Cálculo Completo de Férias & Abono Pecuniário
+                            Recibo de Férias & Abono Pecuniário
                         </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Salário Base (R$)</label>
-                                <input type="text" id="wb-ferias-salario" class="currency-input input-field" placeholder="Ex: 3.600,00" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Salário Base (R$)</label>
+                                <input type="text" id="fer-salario" class="currency-input input-field" placeholder="Ex: 3.600,00" oninput="validarCampos()">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Média de Variáveis (R$)</label>
-                                <input type="text" id="wb-ferias-media" class="currency-input input-field" placeholder="Ex: 250,00" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Média de Horas Extras/Variáveis (R$)</label>
+                                <input type="text" id="fer-media" class="currency-input input-field" placeholder="Ex: 0,00" oninput="validarCampos()">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Faltas Injustificadas no Período</label>
-                                <input type="number" id="wb-ferias-faltas" class="input-field" value="0" min="0" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Dias Gozados</label>
+                                <input type="number" id="fer-dias-gozo" class="input-field" value="30" oninput="validarCampos()">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 pt-2 border-t border-dark-border/60">
+                            <div>
+                                <label class="text-[11px] text-slate-400">Valor Férias Gozadas (R$)</label>
+                                <input type="text" id="fer-val-gozo" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-fer-val-gozo"></span>
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Venda de 1/3 (Abono Pecuniário)?</label>
-                                <select id="wb-ferias-abono" class="input-field" onchange="runCalculations()">
-                                    <option value="nao">Não (Gozar dias integrais)</option>
-                                    <option value="sim">Sim (Vender 1/3 legal)</option>
-                                </select>
+                                <label class="text-[11px] text-slate-400">1/3 Constitucional s/ Gozo (R$)</label>
+                                <input type="text" id="fer-val-terco" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-fer-val-terco"></span>
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Dias Gozados</label>
-                                <input type="number" id="wb-ferias-dias-gozo" class="input-field" value="30" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Abono Pecuniário + 1/3 (Isento R$)</label>
+                                <input type="text" id="fer-val-abono" class="currency-input input-field" placeholder="Ex: 0,00" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-fer-val-abono"></span>
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Dependentes de IRRF</label>
-                                <input type="number" id="wb-ferias-deps" class="input-field" value="0" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400 font-bold text-emerald-400">TOTAL BRUTO FÉRIAS (R$)</label>
+                                <input type="text" id="fer-tot-bruto" class="currency-input input-field font-bold text-emerald-400" placeholder="Total bruto" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-fer-tot-bruto"></span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-dark-border/60">
+                            <div>
+                                <label class="text-[11px] text-slate-400">INSS sobre Férias (R$)</label>
+                                <input type="text" id="fer-inss" class="currency-input input-field text-rose-300" placeholder="INSS do gozo" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-fer-inss"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">IRRF sobre Férias (R$)</label>
+                                <input type="text" id="fer-irrf" class="currency-input input-field text-rose-300" placeholder="IRRF do gozo" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-fer-irrf"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400 font-bold text-brand-300">LÍQUIDO DE FÉRIAS (R$)</label>
+                                <input type="text" id="fer-liquido" class="currency-input input-field font-black text-white bg-brand-950/40 border-brand-500/40" placeholder="Líquido de Férias" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-fer-liquido"></span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- SUB-ABA 4: RESCISÃO -->
-                <div id="subtab-rescisao" class="workbench-subtab hidden space-y-6">
-                    <div class="bg-dark-panel p-5 rounded-2xl border border-dark-border space-y-4">
-                        <h3 class="text-sm font-bold text-rose-400 flex items-center gap-2">
+                <!-- ABA 3: RESCISÃO -->
+                <div id="subtab-rescisao" class="workbench-subtab hidden space-y-4">
+                    <div class="bg-dark-panel p-4 rounded-2xl border border-dark-border space-y-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-2">
                             <i data-lucide="door-open" class="w-4 h-4"></i>
-                            Rescisão Contratual & Projeção do Aviso
+                            Termo de Rescisão Contratual (TRCT)
                         </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Tipo de Rescisão</label>
-                                <select id="wb-resc-tipo" class="input-field" onchange="runCalculations()">
-                                    <option value="sem_justa_causa">Demissão Sem Justa Causa</option>
-                                    <option value="pedido">Pedido de Demissão</option>
-                                    <option value="acordo">Acordo das Partes (Art. 484-A)</option>
-                                    <option value="com_justa_causa">Demissão Com Justa Causa</option>
-                                </select>
+                                <label class="text-[11px] text-slate-400">Salário Base (R$)</label>
+                                <input type="text" id="resc-salario" class="currency-input input-field" placeholder="Ex: 3.600,00" oninput="validarCampos()">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Salário Base (R$)</label>
-                                <input type="text" id="wb-resc-salario" class="currency-input input-field" placeholder="Ex: 3.600,00" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Anos Completos de Casa</label>
+                                <input type="number" id="resc-anos" class="input-field" value="2" oninput="validarCampos()">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Anos Completos de Empresa</label>
-                                <input type="number" id="wb-resc-anos" class="input-field" value="2" min="0" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Dias Saldo de Salário</label>
+                                <input type="number" id="resc-dias-saldo" class="input-field" value="18" oninput="validarCampos()">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Saldo de Salário (Dias)</label>
-                                <input type="number" id="wb-resc-dias-saldo" class="input-field" value="18" min="0" max="31" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Saldo FGTS para Multa (R$)</label>
+                                <input type="text" id="resc-saldo-fgts" class="currency-input input-field" placeholder="Ex: 6.000,00" oninput="validarCampos()">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 pt-2 border-t border-dark-border/60">
+                            <div>
+                                <label class="text-[11px] text-slate-400">Valor Saldo de Salário (R$)</label>
+                                <input type="text" id="resc-val-saldo" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-resc-val-saldo"></span>
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Avos de 13º Salário</label>
-                                <input type="number" id="wb-resc-avos-13" class="input-field" value="6" min="0" max="12" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Aviso Prévio Indenizado (R$)</label>
+                                <input type="text" id="resc-val-aviso" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-resc-val-aviso"></span>
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Avos Férias Proporcionais</label>
-                                <input type="number" id="wb-resc-avos-ferias" class="input-field" value="8" min="0" max="12" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">13º Salário Proporcional (R$)</label>
+                                <input type="text" id="resc-val-13" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-resc-val-13"></span>
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 font-medium">Saldo FGTS para Multa (R$)</label>
-                                <input type="text" id="wb-resc-saldo-fgts" class="currency-input input-field" placeholder="Ex: 6.000,00" oninput="runCalculations()">
+                                <label class="text-[11px] text-slate-400">Férias Prop. + 1/3 (R$)</label>
+                                <input type="text" id="resc-val-ferias" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-resc-val-ferias"></span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 pt-2 border-t border-dark-border/60">
+                            <div>
+                                <label class="text-[11px] text-slate-400">Multa 40% FGTS (R$)</label>
+                                <input type="text" id="resc-val-multa-fgts" class="currency-input input-field" placeholder="Digite sua conta" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-resc-val-multa-fgts"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400 font-bold text-emerald-400">TOTAL BRUTO RESCISÓRIO (R$)</label>
+                                <input type="text" id="resc-tot-bruto" class="currency-input input-field font-bold text-emerald-400" placeholder="Total bruto" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-resc-tot-bruto"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400">INSS Rescisório (Saldo + 13º R$)</label>
+                                <input type="text" id="resc-inss" class="currency-input input-field text-rose-300" placeholder="INSS isolado" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-resc-inss"></span>
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-slate-400 font-bold text-brand-300">LÍQUIDO RESCISÓRIO (R$)</label>
+                                <input type="text" id="resc-liquido" class="currency-input input-field font-black text-white bg-brand-950/40 border-brand-500/40" placeholder="Líquido final" oninput="validarCampos()">
+                                <span class="feedback-hint" id="hint-resc-liquido"></span>
                             </div>
                         </div>
                     </div>
@@ -327,94 +393,99 @@
 
             </div>
 
-            <!-- Right: Live Result Panel & Mini Calculator (4 Cols) -->
-            <div class="xl:col-span-4 space-y-6">
+            <!-- Right 4 Cols: Calculadora com Histórico + Rascunho -->
+            <div class="xl:col-span-4 space-y-4">
                 
-                <!-- Live Summary Display Card -->
-                <div class="bg-dark-panel p-5 rounded-2xl border border-dark-border space-y-4 shadow-xl">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between border-b border-dark-border pb-3">
-                        <span>Demonstrativo Apurado em Tempo Real</span>
-                        <span class="inline-flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full font-medium">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            Motor 2026 Ativo
-                        </span>
+                <!-- Calculadora de Mesa -->
+                <div class="bg-dark-panel p-4 rounded-2xl border border-dark-border space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                        <span>Calculadora de Apoio</span>
+                        <span class="text-[10px] text-slate-500">Use o teclado numérico</span>
                     </h3>
 
-                    <!-- Display Values -->
-                    <div class="space-y-2.5 text-xs">
-                        <div class="flex justify-between items-center text-slate-300">
-                            <span>Total Proventos (Bruto)</span>
-                            <span id="res-bruto" class="font-mono font-bold text-sm text-emerald-400">R$ 0,00</span>
-                        </div>
-                        <div class="flex justify-between items-center text-slate-400 pl-3 border-l-2 border-slate-700">
-                            <span>Hora Normal Integrada</span>
-                            <span id="res-vhora" class="font-mono text-slate-300">R$ 0,00</span>
-                        </div>
-                        <div class="flex justify-between items-center text-slate-400 pl-3 border-l-2 border-slate-700">
-                            <span>Adicional Noturno + DSR</span>
-                            <span id="res-noturno" class="font-mono text-slate-300">R$ 0,00</span>
-                        </div>
-                        <div class="flex justify-between items-center text-slate-300 pt-2 border-t border-dark-border">
-                            <span>Total de Descontos</span>
-                            <span id="res-descontos" class="font-mono font-bold text-sm text-rose-400">R$ 0,00</span>
-                        </div>
-                        <div class="flex justify-between items-center text-slate-400 pl-3 border-l-2 border-rose-900/50">
-                            <span>INSS Progressivo</span>
-                            <span id="res-inss" class="font-mono text-rose-300">R$ 0,00</span>
-                        </div>
-                        <div class="flex justify-between items-center text-slate-400 pl-3 border-l-2 border-rose-900/50">
-                            <span>IRRF (com Redução 2026)</span>
-                            <span id="res-irrf" class="font-mono text-rose-300">R$ 0,00</span>
-                        </div>
+                    <div id="calc-display" class="bg-dark-bg border border-dark-border rounded-xl p-3 text-right text-xl font-mono text-white min-h-[48px] overflow-x-auto select-all">0</div>
+                    
+                    <div class="grid grid-cols-4 gap-1.5 text-xs font-bold font-mono">
+                        <button onclick="calcClear()" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-rose-400 border border-dark-border">C</button>
+                        <button onclick="calcPercent()" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-brand-400 border border-dark-border">%</button>
+                        <button onclick="calcOp('/')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-brand-400 border border-dark-border">/</button>
+                        <button onclick="calcBack()" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-amber-400 border border-dark-border">&larr;</button>
+
+                        <button onclick="calcNum('7')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-slate-200 border border-dark-border">7</button>
+                        <button onclick="calcNum('8')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-slate-200 border border-dark-border">8</button>
+                        <button onclick="calcNum('9')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-slate-200 border border-dark-border">9</button>
+                        <button onclick="calcOp('*')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-brand-400 border border-dark-border">*</button>
+
+                        <button onclick="calcNum('4')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-slate-200 border border-dark-border">4</button>
+                        <button onclick="calcNum('5')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-slate-200 border border-dark-border">5</button>
+                        <button onclick="calcNum('6')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-slate-200 border border-dark-border">6</button>
+                        <button onclick="calcOp('-')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-brand-400 border border-dark-border">-</button>
+
+                        <button onclick="calcNum('1')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-slate-200 border border-dark-border">1</button>
+                        <button onclick="calcNum('2')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-slate-200 border border-dark-border">2</button>
+                        <button onclick="calcNum('3')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-slate-200 border border-dark-border">3</button>
+                        <button onclick="calcOp('+')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-brand-400 border border-dark-border">+</button>
+
+                        <button onclick="calcNum('0')" class="col-span-2 p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-slate-200 border border-dark-border">0</button>
+                        <button onclick="calcNum('.')" class="p-2.5 bg-dark-bg hover:bg-slate-800 rounded-lg text-slate-200 border border-dark-border">,</button>
+                        <button onclick="calcEquals()" class="p-2.5 bg-brand-600 hover:bg-brand-700 rounded-lg text-white font-black shadow-lg shadow-brand-600/30">=</button>
                     </div>
 
-                    <!-- Salário Líquido Destaque -->
-                    <div class="bg-gradient-to-br from-brand-900/40 to-dark-bg p-4 rounded-xl border border-brand-500/30 text-center space-y-1">
-                        <span class="text-[11px] font-bold text-brand-300 tracking-wide uppercase">Salário Líquido Final</span>
-                        <div id="res-liquido" class="text-2xl font-black text-white font-mono">R$ 0,00</div>
-                        <div class="text-[10px] text-slate-400">FGTS Depositado pela Empresa (8%): <span id="res-fgts" class="font-mono font-semibold text-slate-200">R$ 0,00</span></div>
+                    <!-- Histórico da Calculadora -->
+                    <div class="pt-2 border-t border-dark-border/60 space-y-1">
+                        <div class="flex justify-between items-center text-[10px] text-slate-400">
+                            <span>Últimas Contas</span>
+                            <button onclick="limparHistoricoCalc()" class="text-rose-400 hover:underline">Limpar</button>
+                        </div>
+                        <div id="calc-history-list" class="max-h-20 overflow-y-auto space-y-1 text-[11px] font-mono text-slate-400">
+                            <span class="text-slate-600 text-[10px]">Nenhuma conta salva.</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Quick DP Scratchpad -->
-                <div class="bg-dark-panel p-5 rounded-2xl border border-dark-border space-y-3">
+                <!-- Rascunho com Auto-Save -->
+                <div class="bg-dark-panel p-4 rounded-2xl border border-dark-border space-y-2">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
                         <span>Bloco de Rascunho Livre</span>
-                        <span class="text-[10px] text-slate-500">Auto-save local</span>
+                        <span class="text-[10px] text-emerald-400">Auto-save ativo</span>
                     </h3>
-                    <textarea id="hub-scratchpad" placeholder="Anote cálculos parciais, nomes ou apontamentos aqui..." class="w-full h-32 bg-dark-bg border border-dark-border rounded-xl p-3 text-xs font-mono text-slate-300 focus:outline-none focus:border-brand-500 resize-none"></textarea>
+                    <textarea id="hub-scratchpad" placeholder="Anote cálculos parciais, fórmulas ou dados aqui..." class="w-full h-36 bg-dark-bg border border-dark-border rounded-xl p-3 text-xs font-mono text-slate-300 focus:outline-none focus:border-brand-500 resize-none"></textarea>
                 </div>
 
             </div>
 
         </section>
 
-        <!-- VIEW 2: CENTRAL DE CONHECIMENTO & WIKI DE DP -->
+        <!-- VIEW 2: ENCICLOPÉDIA DE DP (WIKI COMPLETA) -->
         <section id="view-docs" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
             
             <!-- Docs Sidebar: Menu de Categorias (3 Cols) -->
-            <aside class="lg:col-span-3 space-y-4">
-                <div class="bg-dark-panel p-4 rounded-2xl border border-dark-border space-y-2 sticky top-24">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-3 pb-2 border-b border-dark-border">Capítulos & Rotinas</h3>
+            <aside class="lg:col-span-3 space-y-3">
+                <div class="bg-dark-panel p-3 rounded-2xl border border-dark-border space-y-2 sticky top-20">
+                    <div class="px-3 py-1 border-b border-dark-border">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Enciclopédia & Rotinas</h3>
+                        <p class="text-[10px] text-slate-500">9 Módulos Práticos de DP</p>
+                    </div>
                     <nav class="space-y-1 text-xs" id="docs-nav-list">
-                        <!-- Gerado dinamicamente via database-docs.js -->
+                        <!-- Renderizado via database-docs.js -->
                     </nav>
                 </div>
             </aside>
 
             <!-- Docs Reader: Conteúdo Principal Detalhado (9 Cols) -->
             <article class="lg:col-span-9 bg-dark-panel p-6 lg:p-8 rounded-2xl border border-dark-border space-y-6" id="docs-content-area">
-                <!-- Preenchido dinamicamente ao clicar nas categorias -->
+                <!-- Conteúdo denso gerado dinamicamente -->
             </article>
 
         </section>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="mt-auto border-t border-dark-border/60 py-4 px-6 text-center text-xs text-slate-500 bg-dark-panel/30">
-        DP Hub Pro (2026) — Projetado para precisão técnica, conformidade com a CLT e legislação tributária vigente.
-    </footer>
+    <!-- Toast de Notificação -->
+    <div id="toast-notify" class="fixed bottom-5 right-5 bg-emerald-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-2xl transition-all duration-300 opacity-0 pointer-events-none flex items-center gap-2 z-50">
+        <i data-lucide="check-circle" class="w-4 h-4"></i>
+        <span id="toast-message">Copiado com sucesso!</span>
+    </div>
 
     <script src="js/engine-dp.js"></script>
     <script src="js/database-docs.js"></script>
