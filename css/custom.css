@@ -1,1 +1,46 @@
 
+/* Scrollbar customizada moderna */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #090d16;
+}
+::-webkit-scrollbar-thumb {
+    background: #374151;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #4f46e5;
+}
+
+/* Campos de entrada padronizados */
+.input-field {
+    width: 100%;
+    background-color: #090d16;
+    border: 1px solid #374151;
+    border-radius: 0.75rem;
+    padding: 0.55rem 0.75rem;
+    color: #f8fafc;
+    font-size: 0.8125rem;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.input-field:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.nav-btn.active {
+    background-color: #6366f1;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.wb-tab-btn.active {
+    background-color: #1f2937;
+    color: #ffffff;
+    border: 1px solid #374151;
+}
