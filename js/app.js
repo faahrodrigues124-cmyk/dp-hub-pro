@@ -1,25 +1,26 @@
 /**
- * Lógica da Bancada de Treino Manual, Validador Oculto e Cópia Formatada
+ * Aplicação Central DP Pro: Gestor da Trilha, Bancada Manual e Busca Global
  */
 
 let abaAtivaAtual = 'folha';
+let modulosConcluidos = JSON.parse(localStorage.getItem('dp_modulos_concluidos')) || [];
 
 function switchView(viewName) {
-    const workbenchEl = document.getElementById('view-workbench');
-    const docsEl = document.getElementById('view-docs');
-    const btnWb = document.getElementById('btn-nav-workbench');
-    const btnDocs = document.getElementById('btn-nav-docs');
+    document.getElementById('view-trilha').classList.add('hidden');
+    document.getElementById('view-workbench').classList.add('hidden');
+    document.getElementById('view-docs').classList.add('hidden');
+    
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
 
-    if (viewName === 'workbench') {
-        workbenchEl.classList.remove('hidden');
-        docsEl.classList.add('hidden');
-        btnWb.classList.add('active');
-        btnDocs.classList.remove('active');
-    } else {
-        workbenchEl.classList.add('hidden');
-        docsEl.classList.remove('hidden');
-        btnWb.classList.remove('active');
-        btnDocs.classList.add('active');
+    if (viewName === 'trilha') {
+        document.getElementById('view-trilha').classList.remove('hidden');
+        document.getElementById('btn-nav-trilha').classList.add('active');
+    } else if (viewName === 'workbench') {
+        document.getElementById('view-workbench').classList.remove('hidden');
+        document.getElementById('btn-nav-workbench').classList.add('active');
+    } else if (viewName === 'docs') {
+        document.getElementById('view-docs').classList.remove('hidden');
+        document.getElementById('btn-nav-docs').classList.add('active');
     }
 }
 
@@ -55,7 +56,7 @@ function formatBRL(val) {
     return val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-// Formatação automática ao sair do campo
+// Formatação ao sair do campo
 document.querySelectorAll('.currency-input').forEach(input => {
     input.addEventListener('blur', function(e) {
         let value = e.target.value.trim();
@@ -69,7 +70,7 @@ document.querySelectorAll('.currency-input').forEach(input => {
     });
 });
 
-// MOTOR INVISÍVEL DE CONFERÊNCIA
+// MOTOR INVISÍVEL DE VALIDAÇÃO
 function calcularEngineGabarito() {
     // 1. Folha
     const salario = parseVal('wb-salario');
@@ -144,9 +145,7 @@ function calcularEngineGabarito() {
     };
 }
 
-// Conferência das respostas digitadas pelo aluno
 function validarCampos() {
-    const chk = document.getElementById('chkAutoValidate');
     const mapaCampos = [
         { id: 'wb-val-adicional', key: 'valAdicional' },
         { id: 'wb-val-hora', key: 'vHora' },
@@ -175,14 +174,6 @@ function validarCampos() {
         { id: 'resc-inss', key: 'rescINSS' },
         { id: 'resc-liquido', key: 'rescLiquido' }
     ];
-
-    if (!chk || !chk.checked) {
-        mapaCampos.forEach(c => {
-            const el = document.getElementById(c.id);
-            if (el) el.classList.remove('valid-correct', 'valid-wrong');
-        });
-        return;
-    }
 
     const gabarito = calcularEngineGabarito();
 
@@ -224,10 +215,9 @@ function limparCampos() {
         i.classList.remove('valid-correct', 'valid-wrong');
     });
     document.querySelectorAll('.feedback-hint').forEach(h => h.innerText = '');
-    showToast('Campos limpos!');
+    showToast('Campos limpos com sucesso!');
 }
 
-// Cópia do Demonstrativo Formatado para o Chat
 function copiarDemonstrativo() {
     const v = (id) => {
         const el = document.getElementById(id);
@@ -326,7 +316,7 @@ TOTAL BRUTO RESCISÓRIO                      : R$ ${v('resc-tot-bruto')}
     navigator.clipboard.writeText(texto).then(() => {
         showToast('Demonstrativo copiado para o chat!');
     }).catch(() => {
-        showToast('Erro ao copiar. Permissão negada.');
+        showToast('Erro ao copiar.');
     });
 }
 
@@ -336,12 +326,10 @@ function showToast(msg) {
     if (!toast || !msgEl) return;
     msgEl.innerText = msg;
     toast.classList.remove('opacity-0', 'pointer-events-none');
-    setTimeout(() => {
-        toast.classList.add('opacity-0', 'pointer-events-none');
-    }, 2800);
+    setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 2800);
 }
 
-// Calculadora de Apoio
+// Calculadora
 let calcDisplay = document.getElementById('calc-display');
 let calcExpr = '';
 let calcHist = JSON.parse(localStorage.getItem('dphub_calc_hist')) || [];
@@ -351,26 +339,10 @@ function calcNum(n) {
     calcExpr += n;
     calcDisplay.innerText = calcExpr;
 }
-
-function calcOp(op) {
-    calcExpr += op;
-    calcDisplay.innerText = calcExpr;
-}
-
-function calcClear() {
-    calcExpr = '';
-    calcDisplay.innerText = '0';
-}
-
-function calcBack() {
-    calcExpr = calcExpr.slice(0, -1);
-    calcDisplay.innerText = calcExpr || '0';
-}
-
-function calcPercent() {
-    calcExpr += '%';
-    calcDisplay.innerText = calcExpr;
-}
+function calcOp(op) { calcExpr += op; calcDisplay.innerText = calcExpr; }
+function calcClear() { calcExpr = ''; calcDisplay.innerText = '0'; }
+function calcBack() { calcExpr = calcExpr.slice(0, -1); calcDisplay.innerText = calcExpr || '0'; }
+function calcPercent() { calcExpr += '%'; calcDisplay.innerText = calcExpr; }
 
 function calcEquals() {
     try {
@@ -393,7 +365,7 @@ function renderCalcHist() {
     const el = document.getElementById('calc-history-list');
     if (!el) return;
     if (calcHist.length === 0) {
-        el.innerHTML = '<span class="text-slate-600 text-[10px]">Nenhuma conta salva.</span>';
+        el.innerHTML = '<span class="text-slate-600 text-[10px]">Nenhuma conta feita.</span>';
         return;
     }
     el.innerHTML = calcHist.map(h => `
@@ -410,14 +382,70 @@ function limparHistoricoCalc() {
     renderCalcHist();
 }
 
-// Renderização da Enciclopédia (Docs)
+// Renderização da Trilha de Carreira
+function renderTrilhaGrid() {
+    const grid = document.getElementById('trilha-modulos-grid');
+    if (!grid) return;
+
+    grid.innerHTML = DATABASE_DOCS.map((doc, idx) => {
+        const isDone = modulosConcluidos.includes(doc.id);
+        return `
+            <div class="p-5 bg-dark-panel hover:bg-dark-card border ${isDone ? 'border-emerald-500/40' : 'border-dark-border'} rounded-2xl space-y-3 transition-all flex flex-col justify-between shadow-lg">
+                <div class="space-y-2">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[10px] font-mono font-bold uppercase tracking-wider ${isDone ? 'text-emerald-400' : 'text-brand-400'}">${doc.nivel}</span>
+                        <button onclick="toggleConclusaoModulo('${doc.id}')" class="text-xs p-1 rounded-lg ${isDone ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 hover:text-slate-300'}">
+                            <i data-lucide="${isDone ? 'check-circle' : 'circle'}" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <h4 class="font-bold text-white text-sm tracking-tight">${doc.titulo}</h4>
+                    <p class="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">${doc.descricao}</p>
+                </div>
+                <div class="pt-3 border-t border-dark-border flex items-center justify-between">
+                    <span class="text-[10px] text-slate-500 font-mono">${doc.cargo}</span>
+                    <button onclick="abrirDocPorId('${doc.id}')" class="text-xs font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1">
+                        Estudar <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    atualizarProgressoTrilha();
+    lucide.createIcons();
+}
+
+function toggleConclusaoModulo(id) {
+    if (modulosConcluidos.includes(id)) {
+        modulosConcluidos = modulosConcluidos.filter(m => m !== id);
+    } else {
+        modulosConcluidos.push(id);
+    }
+    localStorage.setItem('dp_modulos_concluidos', JSON.stringify(modulosConcluidos));
+    renderTrilhaGrid();
+}
+
+function atualizarProgressoTrilha() {
+    const pct = Math.round((modulosConcluidos.length / DATABASE_DOCS.length) * 100);
+    document.getElementById('trilha-progresso-txt').innerText = `${pct}%`;
+    document.getElementById('trilha-progresso-bar').style.width = `${pct}%`;
+    document.getElementById('trilha-modulos-concluidos').innerText = modulosConcluidos.length;
+}
+
+function abrirDocPorId(id) {
+    switchView('docs');
+    const idx = DATABASE_DOCS.findIndex(d => d.id === id);
+    if (idx !== -1) loadDoc(idx);
+}
+
+// Wiki e Docs
 function renderDocsMenu() {
     const list = document.getElementById('docs-nav-list');
     if (!list) return;
     list.innerHTML = DATABASE_DOCS.map((d, idx) => `
-        <button onclick="loadDoc(${idx})" class="w-full text-left px-3 py-2 rounded-xl text-slate-300 hover:bg-dark-bg hover:text-white flex items-center gap-2.5 transition-all">
+        <button onclick="loadDoc(${idx})" class="w-full text-left px-3 py-2 rounded-xl text-slate-300 hover:bg-dark-base hover:text-white flex items-center gap-2.5 transition-all text-xs">
             <i data-lucide="${d.icone}" class="w-4 h-4 text-brand-400"></i>
-            <span class="font-semibold">${d.titulo}</span>
+            <span class="font-semibold truncate">${d.titulo}</span>
         </button>
     `).join('');
     loadDoc(0);
@@ -429,9 +457,24 @@ function loadDoc(idx) {
     lucide.createIcons();
 }
 
-// Inicialização
+function filtrarWikiGlobal() {
+    const q = document.getElementById('globalDocSearch').value.toLowerCase();
+    const list = document.getElementById('docs-nav-list');
+    list.innerHTML = DATABASE_DOCS
+        .map((d, idx) => ({ ...d, idx }))
+        .filter(d => d.titulo.toLowerCase().includes(q) || d.conteudo.toLowerCase().includes(q))
+        .map(d => `
+            <button onclick="loadDoc(${d.idx})" class="w-full text-left px-3 py-2 rounded-xl text-slate-300 hover:bg-dark-base hover:text-white flex items-center gap-2.5 transition-all text-xs">
+                <i data-lucide="${d.icone}" class="w-4 h-4 text-brand-400"></i>
+                <span class="font-semibold truncate">${d.titulo}</span>
+            </button>
+        `).join('');
+    lucide.createIcons();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
+    renderTrilhaGrid();
     renderDocsMenu();
     renderCalcHist();
     const sp = document.getElementById('hub-scratchpad');
