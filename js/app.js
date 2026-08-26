@@ -1,5 +1,5 @@
 /**
- * Motor da Bancada DP Pro - Com Gerador Integrado, Calculadora Corrigida e Demonstrativo Limpo
+ * Motor Completo DP Master Pro - Com Layout Integrado, Gerador de Casos, Calculadora Corrigida e Demonstrativo Limpo
  */
 
 const ENGINE_DP = {
@@ -27,7 +27,7 @@ const ENGINE_DP = {
 let casoAtualGerado = null;
 
 function switchView(viewName) {
-    ['view-trilha', 'view-workbench', 'view-docs'].forEach(t => {
+    ['view-trilha', 'view-workbench', 'view-casos', 'view-docs'].forEach(t => {
         const el = document.getElementById(t);
         if (el) el.classList.add('hidden');
     });
@@ -40,6 +40,9 @@ function switchView(viewName) {
         document.getElementById('view-workbench').classList.remove('hidden');
         document.getElementById('btn-nav-workbench').classList.add('active');
         if (!casoAtualGerado) gerarNovoCasoBancada();
+    } else if (viewName === 'casos') {
+        document.getElementById('view-casos').classList.remove('hidden');
+        document.getElementById('btn-nav-casos').classList.add('active');
     } else if (viewName === 'docs') {
         document.getElementById('view-docs').classList.remove('hidden');
         document.getElementById('btn-nav-docs').classList.add('active');
