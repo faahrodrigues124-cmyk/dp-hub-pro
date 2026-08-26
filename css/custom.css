@@ -1,8 +1,7 @@
-
-/* Scrollbar customizada moderna */
+/* Scrollbar fina e moderna */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
 }
 ::-webkit-scrollbar-track {
     background: #090d16;
@@ -15,13 +14,13 @@
     background: #4f46e5;
 }
 
-/* Campos de entrada padronizados */
+/* Campos de entrada customizados */
 .input-field {
     width: 100%;
     background-color: #090d16;
     border: 1px solid #374151;
-    border-radius: 0.75rem;
-    padding: 0.55rem 0.75rem;
+    border-radius: 0.65rem;
+    padding: 0.45rem 0.65rem;
     color: #f8fafc;
     font-size: 0.8125rem;
     outline: none;
@@ -33,6 +32,37 @@
     box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
 }
 
+/* Feedback de Validação da Bancada */
+.input-field.valid-correct {
+    border-color: #10b981 !important;
+    background-color: rgba(16, 185, 129, 0.08) !important;
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.3);
+}
+
+.input-field.valid-wrong {
+    border-color: #ef4444 !important;
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.3);
+}
+
+.feedback-hint {
+    font-size: 0.68rem;
+    margin-top: 2px;
+    display: none;
+    font-weight: 600;
+}
+
+.input-field.valid-wrong + .feedback-hint {
+    display: block;
+    color: #fca5a5;
+}
+
+.input-field.valid-correct + .feedback-hint {
+    display: block;
+    color: #86efac;
+}
+
+/* Navegação Ativa */
 .nav-btn.active {
     background-color: #6366f1;
     color: #ffffff;
