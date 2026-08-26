@@ -1,5 +1,5 @@
 /**
- * Aplicação Central DP Pro: Gestor da Trilha, Bancada Manual e Busca Global
+ * Aplicação Central DP Pro: Gestor da Trilha, Bancada Manual, Casos Integrados e Auditoria
  */
 
 let abaAtivaAtual = 'folha';
@@ -8,6 +8,7 @@ let modulosConcluidos = JSON.parse(localStorage.getItem('dp_modulos_concluidos')
 function switchView(viewName) {
     document.getElementById('view-trilha').classList.add('hidden');
     document.getElementById('view-workbench').classList.add('hidden');
+    document.getElementById('view-casos').classList.add('hidden');
     document.getElementById('view-docs').classList.add('hidden');
     
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -18,6 +19,10 @@ function switchView(viewName) {
     } else if (viewName === 'workbench') {
         document.getElementById('view-workbench').classList.remove('hidden');
         document.getElementById('btn-nav-workbench').classList.add('active');
+    } else if (viewName === 'casos') {
+        document.getElementById('view-casos').classList.remove('hidden');
+        document.getElementById('btn-nav-casos').classList.add('active');
+        carregarCasoIntegrado(1);
     } else if (viewName === 'docs') {
         document.getElementById('view-docs').classList.remove('hidden');
         document.getElementById('btn-nav-docs').classList.add('active');
@@ -72,7 +77,6 @@ document.querySelectorAll('.currency-input').forEach(input => {
 
 // MOTOR INVISÍVEL DE VALIDAÇÃO
 function calcularEngineGabarito() {
-    // 1. Folha
     const salario = parseVal('wb-salario');
     const tipoAdicional = document.getElementById('wb-tipo-adicional').value;
     let valAdicional = 0;
@@ -108,7 +112,6 @@ function calcularEngineGabarito() {
     const totDescontos = descFaltas + descAtrasos + descVT + descINSS + descIRRF;
     const totLiquido = Math.max(0, totProventos - totDescontos);
 
-    // 2. Férias
     const ferSalario = parseVal('fer-salario');
     const ferMedia = parseVal('fer-media');
     const ferRemunera = ferSalario + ferMedia;
@@ -120,7 +123,6 @@ function calcularEngineGabarito() {
     const ferIRRF = ENGINE_DP.calcularIRRF(ferTotBruto, ferINSS, 0);
     const ferLiquido = Math.max(0, ferTotBruto - ferINSS - ferIRRF);
 
-    // 3. Rescisão
     const rescSalario = parseVal('resc-salario');
     const rescAnos = parseInt(document.getElementById('resc-anos').value) || 0;
     const rescDiasSaldo = parseInt(document.getElementById('resc-dias-saldo').value) || 0;
@@ -147,52 +149,34 @@ function calcularEngineGabarito() {
 
 function validarCampos() {
     const mapaCampos = [
-        { id: 'wb-val-adicional', key: 'valAdicional' },
-        { id: 'wb-val-hora', key: 'vHora' },
-        { id: 'wb-val-he50-unit', key: 'vHE50Unit' },
-        { id: 'wb-noturno-reduzido', key: 'noturnoReduzido' },
-        { id: 'wb-tot-he50', key: 'totHE50' },
-        { id: 'wb-tot-adn', key: 'totAdn' },
-        { id: 'wb-tot-dsr', key: 'totDsr' },
-        { id: 'wb-tot-proventos', key: 'totProventos' },
-        { id: 'wb-desc-inss', key: 'descINSS' },
-        { id: 'wb-desc-irrf', key: 'descIRRF' },
-        { id: 'wb-tot-descontos', key: 'totDescontos' },
-        { id: 'wb-tot-liquido', key: 'totLiquido' },
-        { id: 'fer-val-gozo', key: 'ferValGozo' },
-        { id: 'fer-val-terco', key: 'ferValTerco' },
-        { id: 'fer-tot-bruto', key: 'ferTotBruto' },
-        { id: 'fer-inss', key: 'ferINSS' },
-        { id: 'fer-irrf', key: 'ferIRRF' },
-        { id: 'fer-liquido', key: 'ferLiquido' },
-        { id: 'resc-val-saldo', key: 'rescValSaldo' },
-        { id: 'resc-val-aviso', key: 'rescValAviso' },
-        { id: 'resc-val-13', key: 'rescVal13' },
-        { id: 'resc-val-ferias', key: 'rescValFerias' },
-        { id: 'resc-val-multa-fgts', key: 'rescValMultaFGTS' },
-        { id: 'resc-tot-bruto', key: 'rescTotBruto' },
-        { id: 'resc-inss', key: 'rescINSS' },
-        { id: 'resc-liquido', key: 'rescLiquido' }
+        { id: 'wb-val-adicional', key: 'valAdicional' }, { id: 'wb-val-hora', key: 'vHora' },
+        { id: 'wb-val-he50-unit', key: 'vHE50Unit' }, { id: 'wb-noturno-reduzido', key: 'noturnoReduzido' },
+        { id: 'wb-tot-he50', key: 'totHE50' }, { id: 'wb-tot-adn', key: 'totAdn' },
+        { id: 'wb-tot-dsr', key: 'totDsr' }, { id: 'wb-tot-proventos', key: 'totProventos' },
+        { id: 'wb-desc-inss', key: 'descINSS' }, { id: 'wb-desc-irrf', key: 'descIRRF' },
+        { id: 'wb-tot-descontos', key: 'totDescontos' }, { id: 'wb-tot-liquido', key: 'totLiquido' },
+        { id: 'fer-val-gozo', key: 'ferValGozo' }, { id: 'fer-val-terco', key: 'ferValTerco' },
+        { id: 'fer-tot-bruto', key: 'ferTotBruto' }, { id: 'fer-inss', key: 'ferINSS' },
+        { id: 'fer-irrf', key: 'ferIRRF' }, { id: 'fer-liquido', key: 'ferLiquido' },
+        { id: 'resc-val-saldo', key: 'rescValSaldo' }, { id: 'resc-val-aviso', key: 'rescValAviso' },
+        { id: 'resc-val-13', key: 'rescVal13' }, { id: 'resc-val-ferias', key: 'rescValFerias' },
+        { id: 'resc-val-multa-fgts', key: 'rescValMultaFGTS' }, { id: 'resc-tot-bruto', key: 'rescTotBruto' },
+        { id: 'resc-inss', key: 'rescINSS' }, { id: 'resc-liquido', key: 'rescLiquido' }
     ];
 
     const gabarito = calcularEngineGabarito();
-
     mapaCampos.forEach(c => {
         const el = document.getElementById(c.id);
         const hintEl = document.getElementById('hint-' + c.id);
         if (!el) return;
-
         const digitado = parseVal(c.id);
         const correto = gabarito[c.key];
-
         if (!el.value || el.value.trim() === '') {
             el.classList.remove('valid-correct', 'valid-wrong');
             if (hintEl) hintEl.innerText = '';
             return;
         }
-
-        const diff = Math.abs(digitado - correto);
-        if (diff <= 0.08) {
+        if (Math.abs(digitado - correto) <= 0.08) {
             el.classList.add('valid-correct');
             el.classList.remove('valid-wrong');
             if (hintEl) hintEl.innerText = '✓ Correto!';
@@ -223,101 +207,32 @@ function copiarDemonstrativo() {
         const el = document.getElementById(id);
         return el && el.value ? el.value : '0,00';
     };
-
     let texto = '';
-
     if (abaAtivaAtual === 'folha') {
         texto = `====================================================================
                     DEMONSTRATIVO DE PAGAMENTO (HOLERITE)
 ====================================================================
-[ CALENDÁRIO DSR DO MÊS ]
-• Dias Úteis: ${v('wb-dias-uteis')} dias  |  • Domingos e Feriados: ${v('wb-dsr-dias')} dias
---------------------------------------------------------------------
-[ APURAÇÃO DE HORA NOTURNA & PRORROGAÇÃO ]
-• Horas Relógio Noturnas: ${v('wb-noturno-relogio')} h
-• Horas Reduzidas Noturnas (1,142857): ${v('wb-noturno-reduzido')} h
---------------------------------------------------------------------
-[ PROVENTOS ]                                 [ VALOR (R$) ]
---------------------------------------------------------------------
-• Salário Base                              : ${v('wb-salario')}
-• Adicional Especial (Peric./Insalub.)      : ${v('wb-val-adicional')}
-  - Valor da Hora Integrada                 : ${v('wb-val-hora')}
-  - Valor HE 50% (Unitária)                 : ${v('wb-val-he50-unit')}
-• Total Horas Extras 50%                    : ${v('wb-tot-he50')}
-• Adicional Noturno Total                   : ${v('wb-tot-adn')}
-• DSR s/ Variáveis (HE/Noturno)             : ${v('wb-tot-dsr')}
-• Comissões                                 : ${v('wb-comissao')}
---------------------------------------------------------------------
-TOTAL DE PROVENTOS (Salário Bruto)          : R$ ${v('wb-tot-proventos')}
-====================================================================
-
-[ DESCONTOS ]                                 [ VALOR (R$) ]
---------------------------------------------------------------------
-• Faltas + DSR Perdido                      : ${v('wb-desc-faltas')}
-• Atrasos                                   : ${v('wb-desc-atrasos')}
-• Vale-Transporte (6%)                      : ${v('wb-desc-vt')}
-• INSS                                      : ${v('wb-desc-inss')}
-• IRRF                                      : ${v('wb-desc-irrf')}
---------------------------------------------------------------------
-TOTAL DE DESCONTOS                          : R$ ${v('wb-tot-descontos')}
-====================================================================
-
-[ RESUMO FINANCEIRO ]
---------------------------------------------------------------------
-• SALÁRIO BRUTO                             : R$ ${v('wb-tot-proventos')}
-• TOTAL DE DESCONTOS                        : R$ ${v('wb-tot-descontos')}
-• SALÁRIO LÍQUIDO A RECEBER                 : R$ ${v('wb-tot-liquido')}
+• Salário Base: ${v('wb-salario')} | Adicional: ${v('wb-val-adicional')}
+• Total Proventos (Bruto): R$ ${v('wb-tot-proventos')}
+• Total Descontos: R$ ${v('wb-tot-descontos')}
+• Salário Líquido Final: R$ ${v('wb-tot-liquido')}
 ====================================================================`;
     } else if (abaAtivaAtual === 'ferias') {
         texto = `====================================================================
                     RECIBO DE FÉRIAS (DEMONSTRATIVO)
 ====================================================================
-[ PROVENTOS DE FÉRIAS ]                       [ VALOR (R$) ]
---------------------------------------------------------------------
-• Salário Base                              : ${v('fer-salario')}
-• Média de Horas Extras / Variáveis         : ${v('fer-media')}
-• Valor Férias Gozadas                      : ${v('fer-val-gozo')}
-• 1/3 Constitucional s/ Gozo                : ${v('fer-val-terco')}
-• Abono Pecuniário + 1/3 (Isento)           : ${v('fer-val-abono')}
---------------------------------------------------------------------
-TOTAL BRUTO DE FÉRIAS                       : R$ ${v('fer-tot-bruto')}
-====================================================================
-
-[ DESCONTOS DE FÉRIAS ]                       [ VALOR (R$) ]
---------------------------------------------------------------------
-• INSS sobre Férias                         : ${v('fer-inss')}
-• IRRF sobre Férias                         : ${v('fer-irrf')}
---------------------------------------------------------------------
-• LÍQUIDO DE FÉRIAS A RECEBER               : R$ ${v('fer-liquido')}
+• Total Bruto de Férias: R$ ${v('fer-tot-bruto')}
+• Líquido de Férias: R$ ${v('fer-liquido')}
 ====================================================================`;
     } else if (abaAtivaAtual === 'rescisao') {
         texto = `====================================================================
                     TERMO DE RESCISÃO CONTRATUAL (DEMONSTRATIVO)
 ====================================================================
-[ VERBAS RESCISÓRIAS (PROVENTOS) ]            [ VALOR (R$) ]
---------------------------------------------------------------------
-• Saldo de Salário (${v('resc-dias-saldo')} dias)               : ${v('resc-val-saldo')}
-• Aviso Prévio Indenizado                   : ${v('resc-val-aviso')}
-• 13º Salário Proporcional                  : ${v('resc-val-13')}
-• Férias Proporcionais + 1/3                : ${v('resc-val-ferias')}
-• Multa Rescisória do FGTS (40%)            : ${v('resc-val-multa-fgts')}
---------------------------------------------------------------------
-TOTAL BRUTO RESCISÓRIO                      : R$ ${v('resc-tot-bruto')}
-====================================================================
-
-[ DESCONTOS RESCISÓRIOS ]                     [ VALOR (R$) ]
---------------------------------------------------------------------
-• INSS Rescisório (Saldo + 13º)             : ${v('resc-inss')}
---------------------------------------------------------------------
-• TOTAL LÍQUIDO RESCISÓRIO A RECEBER        : R$ ${v('resc-liquido')}
+• Total Bruto Rescisório: R$ ${v('resc-tot-bruto')}
+• Líquido Rescisório: R$ ${v('resc-liquido')}
 ====================================================================`;
     }
-
-    navigator.clipboard.writeText(texto).then(() => {
-        showToast('Demonstrativo copiado para o chat!');
-    }).catch(() => {
-        showToast('Erro ao copiar.');
-    });
+    navigator.clipboard.writeText(texto).then(() => showToast('Demonstrativo copiado para o chat!'));
 }
 
 function showToast(msg) {
@@ -329,16 +244,107 @@ function showToast(msg) {
     setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 2800);
 }
 
+// Lógica de Casos Integrados e Auditoria
+function mudarModoCaso(modo) {
+    document.getElementById('submodo-simulador').classList.add('hidden');
+    document.getElementById('submodo-auditoria').classList.add('hidden');
+    document.getElementById('btn-modo-simulador').className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold bg-dark-base text-slate-400 border border-dark-border';
+    document.getElementById('btn-modo-auditoria').className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold bg-dark-base text-slate-400 border border-dark-border';
+
+    if (modo === 'simulador') {
+        document.getElementById('submodo-simulador').classList.remove('hidden');
+        document.getElementById('btn-modo-simulador').className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold bg-brand-600 text-white shadow-lg shadow-brand-600/20';
+    } else {
+        document.getElementById('submodo-auditoria').classList.remove('hidden');
+        document.getElementById('btn-modo-auditoria').className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold bg-rose-600 text-white shadow-lg shadow-rose-600/20';
+        carregarNovaAuditoria();
+    }
+}
+
+const CASOS_DADOS = {
+    1: {
+        titulo: "Nível 1 — Integração Simples (Salário + HE + Adicional Noturno + DSR)",
+        enunciado: "Funcionário mensalista, salário de R$ 3.000,00, 220h mensais, 25 dias úteis e 5 domingos/feriados. Realizou 10 horas extras 50% e 20 horas noturnas de relógio no mês. Sem faltas.",
+        gabarito: "1. Valor da Hora: R$ 3.000,00 ÷ 220 = R$ 13,64<br>2. HE 50%: 10 × (13,64 × 1,5) = R$ 204,55<br>3. Horas Reduzidas Noturnas: 20 × 1,142857 = 22,86h<br>4. Adicional Noturno: 22,86 × (13,64 × 0,20) = R$ 62,35<br>5. DSR s/ Variáveis: ((204,55 + 62,35) ÷ 25) × 5 = R$ 53,38<br>6. Salário Bruto: 3.000,00 + 204,55 + 62,35 + 53,38 = R$ 3.320,28"
+    },
+    2: {
+        titulo: "Nível 2 — Integração Intermediária (Comissão + Faltas + INSS + IRRF)",
+        enunciado: "Mensalista, salário R$ 2.800,00, recebeu R$ 1.500,00 de comissões (25 dias úteis, 5 DSR). Teve 1 falta injustificada e 1 dependente. Sem outras variáveis.",
+        gabarito: "1. Desconto de Falta: R$ 2.800,00 ÷ 30 = R$ 93,33 (mais perda do DSR proporcional ou da semana).<br>2. DSR sobre Comissões: (1.500,00 ÷ 25) × 5 = R$ 300,00.<br>3. Salário Bruto: 2.800,00 + 1.500,00 + 300,00 - 93,33 = R$ 4.506,67.<br>4. Base INSS: R$ 4.506,67 → INSS = (4.506,67 × 0,14) - 198,49 = R$ 432,44.<br>5. Base IRRF com 1 dependente e INSS: Cálculo progressivo com redução 2026."
+    },
+    3: {
+        titulo: "Nível 3 — Integração Avançada (Insalubridade + HE Noturna + Prorrogação)",
+        enunciado: "Técnico de Enfermagem, salário R$ 2.500,00, Insalubridade grau médio (20% s/ Mínimo R$ 1.621,00). Realizou plantões noturnos com HE noturna e prorrogação.",
+        gabarito: "1. Insalubridade: 1.621,00 × 0,20 = R$ 324,20.<br>2. Hora Integrada: (2.500,00 + 324,20) ÷ 220 = R$ 12,84.<br>3. Aplicação cumulativa da HE Noturna (Adicional Noturno + Adicional HE 50%).<br>4. Apuração de DSR e reflexos na base de encargos."
+    },
+    4: {
+        titulo: "Nível 4 — Folha Completa (Cenário Real de Fechamento)",
+        enunciado: "Analista Contábil, salário R$ 4.200,00 com Periculosidade (30%). Trabalhou no mês com HE, comissão, faltas e VT. Monte a folha completa identificando todas as etapas.",
+        gabarito: "1. Periculosidade: R$ 1.260,00.<br>2. Hora Integrada: (4.200 + 1.260) ÷ 220 = R$ 24,82.<br>3. Apuração de proventos, dedução de faltas, base INSS, INSS Progressivo, IRRF e Líquido."
+    }
+};
+
+function carregarCasoIntegrado(nivel) {
+    document.querySelectorAll('[id^="btn-caso-lvl"]').forEach(b => b.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-dark-base text-slate-400 border border-dark-border');
+    document.getElementById(`btn-caso-lvl${nivel}`).className = `px-3 py-1 rounded-lg text-xs font-bold bg-dark-base ${nivel === 1 ? 'text-emerald-400 border-emerald-500/35' : nivel === 2 ? 'text-cyan-400 border-cyan-500/35' : nivel === 3 ? 'text-amber-400 border-amber-500/35' : 'text-rose-400 border-rose-500/35'} border`;
+    
+    const caso = CASOS_DADOS[nivel];
+    document.getElementById('caso-descricao').innerHTML = `<b>${caso.titulo}</b><br><br>${caso.enunciado}`;
+    document.getElementById('caso-resposta-usuario').value = '';
+    document.getElementById('caso-gabarito').innerHTML = '<span class="text-slate-500">Clique em "Ver Gabarito & Raciocínio" após registrar sua análise.</span>';
+}
+
+function verificarAnaliseCaso() {
+    const txt = document.getElementById('caso-resposta-usuario').value.trim();
+    // Ativa o gabarito correspondente ao nível ativo
+    const btnAtivo = document.querySelector('[id^="btn-caso-lvl"].border-emerald-500, [id^="btn-caso-lvl"].border-cyan-500, [id^="btn-caso-lvl"].border-amber-500, [id^="btn-caso-lvl"].border-rose-500');
+    let lvl = 1;
+    if (btnAtivo) lvl = parseInt(btnAtivo.id.replace('btn-caso-lvl',''));
+    
+    const caso = CASOS_DADOS[lvl];
+    document.getElementById('caso-gabarito').innerHTML = `
+        <div class="text-emerald-400 font-bold">✓ Análise Registrada. Confira com o Gabarito Oficial:</div>
+        <div class="pt-2 text-slate-300 leading-relaxed">${caso.gabarito}</div>
+    `;
+    showToast('Gabarito liberado para conferência!');
+}
+
+const AUDITORIAS_BANCO = [
+    {
+        cenario: "Folha de Pagamento de João (Salário R$ 3.000,00 + Adicional Noturno R$ 150,00).<br>O analista calculou o INSS somando o salário e o adicional noturno, chegando a R$ 3.150,00, e aplicou a alíquota única de 12% sobre o total, sem dedução, descontando R$ 378,00 de INSS.",
+        erro: "1. O INSS não é calculado por alíquota fixa linear sobre o total, e sim de forma <b>progressiva por faixas</b> aplicando a parcela a deduzir.<br>2. O valor de R$ 3.150,00 na 3ª faixa (12%) tem dedução oficial de R$ 111,40: (3.150 × 0,12) - 111,40 = R$ 266,60 (e não R$ 378,00)."
+    },
+    {
+        cenario: "Funcionário mensalista faltou 2 dias na semana sem justificativa. No fechamento da folha, a empresa descontou apenas os 2 dias de salário correspondentes, mantendo o DSR da semana integralmente pago.",
+        erro: "Incorreção em relação ao <b>Art. 6º da Lei nº 605/1949</b>. A falta injustificada gera a perda do DSR da respectiva semana, devendo a empresa descontar o dia da falta <b>mais o DSR correspondente</b>."
+    }
+];
+
+function carregarNovaAuditoria() {
+    const item = AUDITORIAS_BANCO[Math.floor(Math.random() * AUDITORIAS_BANCO.length)];
+    document.getElementById('auditoria-cenario').innerHTML = item.cenario;
+    document.getElementById('auditoria-resposta').value = '';
+    document.getElementById('auditoria-feedback').innerHTML = '';
+    window.auditoriaGabaritoAtual = item.erro;
+}
+
+function verificarAuditoria() {
+    const feedback = document.getElementById('auditoria-feedback');
+    feedback.innerHTML = `
+        <div class="p-3 bg-dark-base rounded-xl border border-rose-500/30 text-rose-300 space-y-1">
+            <b>Auditoria Realizada — Gabarito Oficial:</b><br>
+            ${window.auditoriaGabaritoAtual}
+        </div>
+    `;
+    showToast('Auditoria verificada!');
+}
+
 // Calculadora
 let calcDisplay = document.getElementById('calc-display');
 let calcExpr = '';
 let calcHist = JSON.parse(localStorage.getItem('dphub_calc_hist')) || [];
 
-function calcNum(n) {
-    if (calcDisplay.innerText === '0' || calcDisplay.innerText === 'Erro') calcExpr = '';
-    calcExpr += n;
-    calcDisplay.innerText = calcExpr;
-}
+function calcNum(n) { if (calcDisplay.innerText === '0' || calcDisplay.innerText === 'Erro') calcExpr = ''; calcExpr += n; calcDisplay.innerText = calcExpr; }
 function calcOp(op) { calcExpr += op; calcDisplay.innerText = calcExpr; }
 function calcClear() { calcExpr = ''; calcDisplay.innerText = '0'; }
 function calcBack() { calcExpr = calcExpr.slice(0, -1); calcDisplay.innerText = calcExpr || '0'; }
@@ -355,38 +361,21 @@ function calcEquals() {
         localStorage.setItem('dphub_calc_hist', JSON.stringify(calcHist));
         renderCalcHist();
         calcExpr = res.toString();
-    } catch(e) {
-        calcDisplay.innerText = 'Erro';
-        calcExpr = '';
-    }
+    } catch(e) { calcDisplay.innerText = 'Erro'; calcExpr = ''; }
 }
 
 function renderCalcHist() {
     const el = document.getElementById('calc-history-list');
     if (!el) return;
-    if (calcHist.length === 0) {
-        el.innerHTML = '<span class="text-slate-600 text-[10px]">Nenhuma conta feita.</span>';
-        return;
-    }
-    el.innerHTML = calcHist.map(h => `
-        <div class="flex justify-between items-center text-slate-400">
-            <span>${h.expr}</span>
-            <span class="font-bold text-white">${h.res}</span>
-        </div>
-    `).join('');
+    if (calcHist.length === 0) { el.innerHTML = '<span class="text-slate-600 text-[10px]">Nenhuma conta feita.</span>'; return; }
+    el.innerHTML = calcHist.map(h => `<div class="flex justify-between items-center text-slate-400"><span>${h.expr}</span><span class="font-bold text-white">${h.res}</span></div>`).join('');
 }
+function limparHistoricoCalc() { calcHist = []; localStorage.removeItem('dphub_calc_hist'); renderCalcHist(); }
 
-function limparHistoricoCalc() {
-    calcHist = [];
-    localStorage.removeItem('dphub_calc_hist');
-    renderCalcHist();
-}
-
-// Renderização da Trilha de Carreira
+// Trilha e Docs
 function renderTrilhaGrid() {
     const grid = document.getElementById('trilha-modulos-grid');
     if (!grid) return;
-
     grid.innerHTML = DATABASE_DOCS.map((doc, idx) => {
         const isDone = modulosConcluidos.includes(doc.id);
         return `
@@ -403,24 +392,18 @@ function renderTrilhaGrid() {
                 </div>
                 <div class="pt-3 border-t border-dark-border flex items-center justify-between">
                     <span class="text-[10px] text-slate-500 font-mono">${doc.cargo}</span>
-                    <button onclick="abrirDocPorId('${doc.id}')" class="text-xs font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1">
-                        Estudar <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                    </button>
+                    <button onclick="abrirDocPorId('${doc.id}')" class="text-xs font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1">Estudar <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></button>
                 </div>
             </div>
         `;
     }).join('');
-
     atualizarProgressoTrilha();
     lucide.createIcons();
 }
 
 function toggleConclusaoModulo(id) {
-    if (modulosConcluidos.includes(id)) {
-        modulosConcluidos = modulosConcluidos.filter(m => m !== id);
-    } else {
-        modulosConcluidos.push(id);
-    }
+    if (modulosConcluidos.includes(id)) modulosConcluidos = modulosConcluidos.filter(m => m !== id);
+    else modulosConcluidos.push(id);
     localStorage.setItem('dp_modulos_concluidos', JSON.stringify(modulosConcluidos));
     renderTrilhaGrid();
 }
@@ -432,13 +415,8 @@ function atualizarProgressoTrilha() {
     document.getElementById('trilha-modulos-concluidos').innerText = modulosConcluidos.length;
 }
 
-function abrirDocPorId(id) {
-    switchView('docs');
-    const idx = DATABASE_DOCS.findIndex(d => d.id === id);
-    if (idx !== -1) loadDoc(idx);
-}
+function abrirDocPorId(id) { switchView('docs'); const idx = DATABASE_DOCS.findIndex(d => d.id === id); if (idx !== -1) loadDoc(idx); }
 
-// Wiki e Docs
 function renderDocsMenu() {
     const list = document.getElementById('docs-nav-list');
     if (!list) return;
@@ -454,21 +432,6 @@ function renderDocsMenu() {
 function loadDoc(idx) {
     const d = DATABASE_DOCS[idx];
     document.getElementById('docs-content-area').innerHTML = d.conteudo;
-    lucide.createIcons();
-}
-
-function filtrarWikiGlobal() {
-    const q = document.getElementById('globalDocSearch').value.toLowerCase();
-    const list = document.getElementById('docs-nav-list');
-    list.innerHTML = DATABASE_DOCS
-        .map((d, idx) => ({ ...d, idx }))
-        .filter(d => d.titulo.toLowerCase().includes(q) || d.conteudo.toLowerCase().includes(q))
-        .map(d => `
-            <button onclick="loadDoc(${d.idx})" class="w-full text-left px-3 py-2 rounded-xl text-slate-300 hover:bg-dark-base hover:text-white flex items-center gap-2.5 transition-all text-xs">
-                <i data-lucide="${d.icone}" class="w-4 h-4 text-brand-400"></i>
-                <span class="font-semibold truncate">${d.titulo}</span>
-            </button>
-        `).join('');
     lucide.createIcons();
 }
 
