@@ -1,28 +1,6 @@
 /**
- * Motor DP Pro Training Station - Layout Original Preservado + Calculadora Corrigida + Demonstrativo Limpo
+ * Motor DP Pro Training Station - Completo e Integrado
  */
-
-const ENGINE_DP = {
-    SALARIO_MINIMO_2026: 1518.00,
-    
-    calcularINSS(base) {
-        if (base <= 1518.00) return base * 0.075;
-        if (base <= 2793.88) return (1518.00 * 0.075) + ((base - 1518.00) * 0.09);
-        if (base <= 4190.83) return (1518.00 * 0.075) + ((2793.88 - 1518.00) * 0.09) + ((base - 2793.88) * 0.12);
-        if (base <= 8157.41) return (1518.00 * 0.075) + ((2793.88 - 1518.00) * 0.09) + ((4190.83 - 2793.88) * 0.12) + ((base - 4190.83) * 0.14);
-        return 951.63;
-    },
-
-    calcularIRRF(base, inss, dependentes) {
-        let deducaoDep = dependentes * 189.59;
-        let baseCalculo = base - inss - deducaoDep;
-        if (baseCalculo <= 2259.20) return 0;
-        if (baseCalculo <= 2826.65) return (baseCalculo * 0.075) - 169.44;
-        if (baseCalculo <= 3751.05) return (baseCalculo * 0.15) - 381.44;
-        if (baseCalculo <= 4664.68) return (baseCalculo * 0.225) - 662.77;
-        return (baseCalculo * 0.275) - 896.00;
-    }
-};
 
 function switchView(viewName) {
     ['view-trilha', 'view-workbench', 'view-casos', 'view-docs'].forEach(t => {
@@ -92,10 +70,13 @@ function calcularEngineGabarito() {
     const salario = parseVal('wb-salario');
     const tipoAdicional = document.getElementById('wb-tipo-adicional').value;
     let valAdicional = 0;
+    
+    const salMinimo = typeof ENGINE_DP !== 'undefined' ? ENGINE_DP.SALARIO_MINIMO_2026 : 1518.00;
+
     if (tipoAdicional === 'periculosidade') valAdicional = salario * 0.30;
-    else if (tipoAdicional === 'insalubridade_10') valAdicional = ENGINE_DP.SALARIO_MINIMO_2026 * 0.10;
-    else if (tipoAdicional === 'insalubridade_20') valAdicional = ENGINE_DP.SALARIO_MINIMO_2026 * 0.20;
-    else if (tipoAdicional === 'insalubridade_40') valAdicional = ENGINE_DP.SALARIO_MINIMO_2026 * 0.40;
+    else if (tipoAdicional === 'insalubridade_10') valAdicional = salMinimo * 0.10;
+    else if (tipoAdicional === 'insalubridade_20') valAdicional = salMinimo * 0.20;
+    else if (tipoAdicional === 'insalubridade_40') valAdicional = salMinimo * 0.40;
 
     const vHora = (salario + valAdicional) > 0 ? (salario + valAdicional) / 220 : 0;
     const vHE50Unit = vHora * 1.50;
@@ -118,9 +99,15 @@ function calcularEngineGabarito() {
     const descVT = parseVal('wb-desc-vt');
 
     const baseINSS = Math.max(0, totProventos - descFaltas - descAtrasos);
-    const descINSS = ENGINE_DP.calcularINSS(baseINSS);
-    const numDeps = parseInt(document.getElementById('wb-num-deps').value) || 0;
-    const descIRRF = ENGINE_DP.calcularIRRF(baseINSS, descINSS, numDeps);
+    let descINSS = 0;
+    let descIRRF = 0;
+
+    if (typeof ENGINE_DP !== 'undefined') {
+        descINSS = ENGINE_DP.calcularINSS(baseINSS);
+        const numDeps = parseInt(document.getElementById('wb-num-deps').value) || 0;
+        descIRRF = ENGINE_DP.calcularIRRF(baseINSS, descINSS, numDeps);
+    }
+
     const totDescontos = descFaltas + descAtrasos + descVT + descINSS + descIRRF;
     const totLiquido = Math.max(0, totProventos - totDescontos);
 
@@ -259,7 +246,9 @@ function calcEquals() {
 }
 
 document.addEventListener('keydown', (e) => {
-    if (document.getElementById('view-workbench').classList.contains('hidden')) return;
+    const workbenchView = document.getElementById('view-workbench');
+    if (workbenchView && workbenchView.classList.contains('hidden')) return;
+    
     if (e.key >= '0' && e.key <= '9') calcNum(e.key);
     else if (e.key === '.' || e.key === ',') calcNum('.');
     else if (e.key === '+') calcOp('+');
