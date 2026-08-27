@@ -19,19 +19,11 @@
             }
         }
     </script>
-    <style>
-        .input-field { background-color: #090d16; border: 1px solid #1f2937; color: #f8fafc; border-radius: 0.75rem; padding: 0.5rem 0.75rem; font-size: 0.875rem; width: 100%; transition: all 0.2s; }
-        .input-field:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); }
-        .valid-correct { border-color: #10b981 !important; background-color: rgba(16, 185, 129, 0.05); }
-        .valid-wrong { border-color: #f43f5e !important; background-color: rgba(244, 63, 94, 0.05); }
-        .feedback-hint { font-size: 10px; font-family: monospace; margin-top: 2px; display: block; color: #94a3b8; }
-        .nav-btn.active { background-color: #4f46e5; color: white; border-color: #6366f1; }
-        .wb-tab-btn.active { background-color: #1f2937; color: white; border-bottom: 2px solid #6366f1; }
-    </style>
+    <link rel="stylesheet" href="css/custom.css">
 </head>
 <body class="bg-dark-base text-slate-100 min-h-screen flex flex-col font-sans select-none">
 
-    <!-- HEADER / NAVBAR ORIGINAL -->
+    <!-- HEADER / NAVBAR -->
     <header class="bg-dark-panel border-b border-dark-border px-4 py-3 flex flex-wrap justify-between items-center gap-4 sticky top-0 z-50 shadow-md">
         <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center shadow-lg">
@@ -83,7 +75,7 @@
             </div>
         </section>
 
-        <!-- VIEW 2: BANCADA DE CÁLCULOS ORIGINAL -->
+        <!-- VIEW 2: BANCADA DE CÁLCULOS -->
         <section id="view-workbench" class="grid grid-cols-1 xl:grid-cols-12 gap-6">
             
             <div class="xl:col-span-8 space-y-5">
@@ -108,7 +100,6 @@
                 <!-- SUB-ABA 1: FOLHA MENSAL -->
                 <div id="subtab-folha" class="workbench-subtab space-y-5">
                     
-                    <!-- BLOCO 1 -->
                     <div class="bg-dark-panel p-5 rounded-2xl border border-dark-border space-y-3">
                         <h3 class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
                             <i data-lucide="calendar" class="w-4 h-4"></i> 1. Parâmetros do Mês & Salário Contratual
@@ -157,7 +148,6 @@
                         </div>
                     </div>
 
-                    <!-- BLOCO 2 -->
                     <div class="bg-dark-panel p-5 rounded-2xl border border-dark-border space-y-3">
                         <h3 class="text-xs font-bold uppercase tracking-wider text-purple-400 flex items-center gap-2">
                             <i data-lucide="moon" class="w-4 h-4"></i> 2. Variáveis, Horas Extras & Adicional Noturno
@@ -206,7 +196,6 @@
                         </div>
                     </div>
 
-                    <!-- BLOCO 3 -->
                     <div class="bg-dark-panel p-5 rounded-2xl border border-dark-border space-y-3">
                         <h3 class="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-2">
                             <i data-lucide="shield-minus" class="w-4 h-4"></i> 3. Faltas, Descontos & Encargos Sociais
@@ -274,10 +263,9 @@
 
             </div>
 
-            <!-- COLUNA DIREITA (4 COLS): CALCULADORA + HISTÓRICO + RASCUNHO -->
+            <!-- COLUNA DIREITA (4 COLS): CALCULADORA + RASCUNHO -->
             <div class="xl:col-span-4 space-y-4">
                 
-                <!-- CALCULADORA DE APOIO ORIGINAL -->
                 <div class="bg-dark-panel p-4 rounded-2xl border border-dark-border space-y-3 shadow-xl">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
                         <span>Calculadora de Apoio</span>
@@ -312,17 +300,13 @@
                         <button onclick="calcEquals()" class="p-2.5 bg-brand-600 hover:bg-brand-700 rounded-lg text-white font-black shadow-lg">=</button>
                     </div>
 
-                    <!-- HISTÓRICO DE ÚLTIMAS CONTAS -->
                     <div class="pt-3 border-t border-dark-border/60 flex items-center justify-between text-[11px] text-slate-400">
                         <span>Últimas Contas</span>
                         <button onclick="limparHistoricoCalc()" class="text-rose-400 hover:underline">Limpar</button>
                     </div>
-                    <div id="calc-history" class="space-y-1 max-h-28 overflow-y-auto font-mono text-xs text-slate-300">
-                        <!-- Histórico populado via JS -->
-                    </div>
+                    <div id="calc-history" class="space-y-1 max-h-28 overflow-y-auto font-mono text-xs text-slate-300"></div>
                 </div>
 
-                <!-- BLOCO DE RASCUNHO LIVRE -->
                 <div class="bg-dark-panel p-4 rounded-2xl border border-dark-border space-y-2 shadow-xl">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
                         <span>Bloco de Rascunho Livre</span>
@@ -363,7 +347,9 @@
         <span id="toast-message" class="text-xs font-medium">Ação realizada!</span>
     </div>
 
-    <!-- SCRIPT EXTERNO -->
+    <!-- SCRIPTS -->
+    <script src="js/engine-dp.js"></script>
+    <script src="js/database-docs.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
